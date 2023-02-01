@@ -1,6 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
-use svelte::{
+use svelte_cli::{
     config::{Config, Operation},
     opts::Opts,
 };

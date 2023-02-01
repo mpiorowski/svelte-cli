@@ -1,9 +1,18 @@
 [package]
-name = "svelte"
+name = "svelte-cli"
 version = "0.1.0"
-edition = "2021"
+authors = ["Mateusz Piórowski <mateuszpiorowski@gmail.com>"]
+license = "MIT"
+description = "Svelte is a simple CLI tool for prototyping and developing Svelte components."
+readme = "README.md"
+homepage = "https://github.com/mpiorowski/svelte-cli"
+repository = "https://github.com/mpiorowski/svelte-cli"
+keywords = ["cli", "utilities", "svelte-cli", "svelte", "sveltekit"]
+categories = ["command-line-utilities"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "svelte"
+path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.68"
