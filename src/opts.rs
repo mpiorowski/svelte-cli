@@ -1,9 +1,13 @@
 use clap::Parser;
 use std::path::PathBuf;
 
+
 #[derive(Parser, Debug)]
 #[clap()]
 pub struct Opts {
+
+    pub path: String,
+
     pub args: Vec<String>,
 
     #[clap(short = 'c', long = "config")]
