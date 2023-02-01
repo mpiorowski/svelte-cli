@@ -4,7 +4,6 @@ use std::path::PathBuf;
 #[derive(Subcommand, Debug)]
 pub enum Action {
     Add(Add),
-    Remove,
 }
 
 #[derive(Parser, Debug)]
@@ -17,14 +16,14 @@ pub struct Opts {
     #[command(subcommand)]
     pub action: Action,
 
-    #[arg(short = 'c', long = "config")]
-    pub config: Option<PathBuf>,
-
     #[arg(short = 'p', long = "pwd")]
     pub pwd: Option<PathBuf>,
+
+    #[arg(short = 'c', long = "config")]
+    pub config: Option<PathBuf>,
 }
 
 #[derive(Args, Debug)]
-struct Add {
+pub struct Add {
     pub args: Vec<String>,
 }

@@ -5,34 +5,26 @@ use anyhow::Context;
 use std::path::PathBuf;
 
 #[derive(Debug)]
-pub struct Config {
+pub struct Svelte {
     pub action: Action,
     pub operation: Operation,
-    pub config: PathBuf,
     pub pwd: PathBuf,
+    pub config: PathBuf,
 }
 
-struct OperationBuilder<'a> {
-    action: &'a Action,
-    value: Vec<String>,
-}
-
-impl TryFrom<Opts> for Config {
+impl TryFrom<Opts> for Svelte {
     type Error = anyhow::Error;
 
     fn try_from(value: Opts) -> Result<Self> {
-        let operation = Operation::try_from(OperationBuilder {
-            action: &value.action,
-            value: value.action
-        })?;
-        let config = get_config(value.config)?;
+        let operation = Operation::try_from(&value.action)?;
         let pwd = get_pwd(value.pwd)?;
+        let config = get_config(value.config)?;
 
-        Ok(Config {
+        Ok(Svelte {
             action: value.action,
             operation,
-            config,
             pwd,
+            config,
         })
     }
 }
@@ -43,21 +35,25 @@ pub enum Operation {
     Pages(Vec<String>),
 }
 
-const ALLOWED_VALUES: [&str; 3] = ["value1", "value2", "value3"];
+const ALLOWED_VALUES: [&str; 5] = ["l", "ls", "p", "ps", "s"];
 
-impl TryFrom<OperationBuilder<'_>> for Operation {
+impl TryFrom<&Action> for Operation {
     type Error = anyhow::Error;
 
-    fn try_from(value: OperationBuilder) -> Result<Self> {
-        if value.value.len() == 0 {
-            return Ok(Operation::Print(None));
-        }
-
-        let action = value.action;
-        if let Action::Add = action {
-            return Ok(Operation::Pages(value.value));
-        } else {
-            Ok(Operation::Print(None))
+    fn try_from(value: &Action) -> Result<Self> {
+        match value {
+            Action::Add(values) => {
+                for v in &values.args {
+                    if !ALLOWED_VALUES.contains(&v.as_str()) {
+                        return Err(anyhow::anyhow!(
+                            "{} is not a valid value. Allowed values are: {:?}",
+                            v,
+                            ALLOWED_VALUES
+                        ));
+                    }
+                }
+                Ok(Operation::Pages(values.args.clone()))
+            }
         }
     }
 }
