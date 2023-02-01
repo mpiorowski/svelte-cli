@@ -22,7 +22,8 @@ impl TryFrom<Opts> for Config {
 
     fn try_from(value: Opts) -> Result<Self> {
         let operation = Operation::try_from(OperationBuilder {
-            &value.action,
+            action: &value.action,
+            value: value.action
         })?;
         let config = get_config(value.config)?;
         let pwd = get_pwd(value.pwd)?;
