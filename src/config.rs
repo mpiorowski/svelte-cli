@@ -1,3 +1,4 @@
+use crate::opts::Action;
 use crate::opts::Opts;
 use ::anyhow::Result;
 use anyhow::Context;
@@ -5,20 +6,29 @@ use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct Config {
+    pub action: Action,
     pub operation: Operation,
     pub config: PathBuf,
     pub pwd: PathBuf,
+}
+
+struct OperationBuilder<'a> {
+    action: &'a Action,
+    value: Vec<String>,
 }
 
 impl TryFrom<Opts> for Config {
     type Error = anyhow::Error;
 
     fn try_from(value: Opts) -> Result<Self> {
-        let operation = Operation::try_from(value.args)?;
+        let operation = Operation::try_from(OperationBuilder {
+            &value.action,
+        })?;
         let config = get_config(value.config)?;
         let pwd = get_pwd(value.pwd)?;
 
         Ok(Config {
+            action: value.action,
             operation,
             config,
             pwd,
@@ -29,30 +39,24 @@ impl TryFrom<Opts> for Config {
 #[derive(Debug)]
 pub enum Operation {
     Print(Option<String>),
-    Page(String, String),
+    Pages(Vec<String>),
 }
 
-impl TryFrom<Vec<String>> for Operation {
+const ALLOWED_VALUES: [&str; 3] = ["value1", "value2", "value3"];
+
+impl TryFrom<OperationBuilder<'_>> for Operation {
     type Error = anyhow::Error;
 
-    fn try_from(mut value: Vec<String>) -> Result<Self> {
-        if value.len() == 0 {
+    fn try_from(value: OperationBuilder) -> Result<Self> {
+        if value.value.len() == 0 {
             return Ok(Operation::Print(None));
         }
 
-        let term = value.get(0).unwrap().to_string();
-        if term == "add" {
-            if value.len() < 3 {
-                return Err(anyhow::anyhow!("Page requires a name and a path"));
-            }
-            let mut drain = value.drain(1..=2);
-
-            Ok(Operation::Page(
-                drain.next().expect("page name"),
-                drain.next().expect("page path"),
-            ))
+        let action = value.action;
+        if let Action::Add = action {
+            return Ok(Operation::Pages(value.value));
         } else {
-            Ok(Operation::Print(Some(term)))
+            Ok(Operation::Print(None))
         }
     }
 }

@@ -1,18 +1,30 @@
-use clap::Parser;
+use clap::{Parser, Subcommand, Args};
 use std::path::PathBuf;
 
+#[derive(Subcommand, Debug)]
+pub enum Action {
+    Add(Add),
+    Remove,
+}
 
 #[derive(Parser, Debug)]
-#[clap()]
+#[command(author, version)]
+#[command(
+    about = "Svelte CLI",
+    long_about = "Svelte CLI is a command line interface for Svelte prototyping and development."
+)]
 pub struct Opts {
+    #[command(subcommand)]
+    pub action: Action,
 
-    pub path: String,
-
-    pub args: Vec<String>,
-
-    #[clap(short = 'c', long = "config")]
+    #[arg(short = 'c', long = "config")]
     pub config: Option<PathBuf>,
 
-    #[clap(short = 'p', long = "pwd")]
+    #[arg(short = 'p', long = "pwd")]
     pub pwd: Option<PathBuf>,
+}
+
+#[derive(Args, Debug)]
+struct Add {
+    pub args: Vec<String>,
 }
