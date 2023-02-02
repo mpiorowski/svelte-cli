@@ -1,14 +1,14 @@
 use anyhow::Result;
 use clap::Parser;
-use svelte_cli::config::AllowedValues;
-use svelte_cli::templates::{
+use sveltecli::templates::{
     error_svelte, layout_client, layout_server, layout_svelte, page_client, page_server,
     page_svelte, server,
 };
-use svelte_cli::{
+use sveltecli::{
     config::{Operation, Svelte},
     opts::Opts,
 };
+use sveltecli::config::AllowedValues;
 
 fn main() -> Result<()> {
     let opts = Svelte::try_from(Opts::parse())?;
