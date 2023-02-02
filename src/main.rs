@@ -1,9 +1,10 @@
-use svelte_cli::temp::page_server::page_server;
 use anyhow::Result;
 use clap::Parser;
+use svelte_cli::config::AllowedValues;
+use svelte_cli::templates::{page_server, layout_server, page_svelte, layout_svelte, server};
 use svelte_cli::{
-    config::{Svelte, Operation},
-    opts::Opts
+    config::{Operation, Svelte},
+    opts::Opts,
 };
 
 fn main() -> Result<()> {
@@ -18,25 +19,22 @@ fn main() -> Result<()> {
             let full_pwd = opts.pwd;
             std::fs::create_dir_all(&full_pwd)?;
             for page in pages {
-                if page == "l" {
-                    std::fs::write(full_pwd.join("layout.svelte"), page_server())?;
-                    continue;
-                }
-                if page == "ls" {
-                    std::fs::write(full_pwd.join("layout.server.ts"), page_server())?;
-                    continue;
-                }
-                if page == "p" {
-                    std::fs::write(full_pwd.join("page.svelte"), page_server())?;
-                    continue;
-                }
-                if page == "ps" {
-                    std::fs::write(full_pwd.join("page.server.ts"), page_server())?;
-                    continue;
-                }
-                if page == "s" {
-                    std::fs::write(full_pwd.join("server.ts"), page_server())?;
-                    continue;
+                match page {
+                    AllowedValues::L => {
+                        std::fs::write(&full_pwd.join("layout.svelte"), layout_svelte())?;
+                    }
+                    AllowedValues::Ls => {
+                        std::fs::write(&full_pwd.join("layout.server.ts"), layout_server())?;
+                    }
+                    AllowedValues::P => {
+                        std::fs::write(&full_pwd.join("page.svelte"), page_svelte())?;
+                    }
+                    AllowedValues::Ps => {
+                        std::fs::write(&full_pwd.join("page.server.ts"), page_server())?;
+                    }
+                    AllowedValues::S => {
+                        std::fs::write(&full_pwd.join("server.ts"), server())?;
+                    }
                 }
             }
         }

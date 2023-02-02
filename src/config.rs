@@ -3,6 +3,7 @@ use crate::opts::Opts;
 use ::anyhow::Result;
 use anyhow::Context;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Svelte {
@@ -32,10 +33,38 @@ impl TryFrom<Opts> for Svelte {
 #[derive(Debug)]
 pub enum Operation {
     Print(Option<String>),
-    Pages(Vec<String>),
+    Pages(Vec<AllowedValues>),
 }
 
-const ALLOWED_VALUES: [&str; 5] = ["l", "ls", "p", "ps", "s"];
+#[derive(Debug)]
+pub enum AllowedValues {
+    L,
+    Ls,
+    P,
+    Ps,
+    S,
+}
+
+impl AllowedValues {
+    pub fn all() -> Vec<&'static str> {
+        vec!["l", "ls", "p", "ps", "s"]
+    }
+}
+
+impl FromStr for AllowedValues {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        match s {
+            "l" => Ok(AllowedValues::L),
+            "ls" => Ok(AllowedValues::Ls),
+            "p" => Ok(AllowedValues::P),
+            "ps" => Ok(AllowedValues::Ps),
+            "s" => Ok(AllowedValues::S),
+            _ => Err(anyhow::anyhow!("Invalid value {}. Allowed values are: {:?}", s, AllowedValues::all())),
+        }
+    }
+}
 
 impl TryFrom<&Action> for Operation {
     type Error = anyhow::Error;
@@ -43,16 +72,13 @@ impl TryFrom<&Action> for Operation {
     fn try_from(value: &Action) -> Result<Self> {
         match value {
             Action::Add(values) => {
-                for v in &values.args {
-                    if !ALLOWED_VALUES.contains(&v.as_str()) {
-                        return Err(anyhow::anyhow!(
-                            "{} is not a valid value. Allowed values are: {:?}",
-                            v,
-                            ALLOWED_VALUES
-                        ));
-                    }
+                if values.args.is_empty() {
+                    return Err(anyhow::anyhow!("no args"));
                 }
-                Ok(Operation::Pages(values.args.clone()))
+                for arg in &values.args {
+                    AllowedValues::from_str(arg)?;
+                }
+                Ok(Operation::Pages(values.args.iter().map(|v| AllowedValues::from_str(v).unwrap()).collect()))
             }
         }
     }
