@@ -12,7 +12,7 @@ keywords = ["cli", "utilities", "svelte-cli", "svelte", "sveltekit"]
 categories = ["command-line-utilities"]
 
 [[bin]]
-name = "svelte"
+name = "sv"
 path = "src/main.rs"
 
 [dependencies]
