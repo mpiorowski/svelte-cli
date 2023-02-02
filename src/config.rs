@@ -10,7 +10,6 @@ pub struct Svelte {
     pub action: Action,
     pub operation: Operation,
     pub pwd: PathBuf,
-    pub config: PathBuf,
 }
 
 impl TryFrom<Opts> for Svelte {
@@ -18,14 +17,12 @@ impl TryFrom<Opts> for Svelte {
 
     fn try_from(value: Opts) -> Result<Self> {
         let operation = Operation::try_from(&value.action)?;
-        let pwd = get_pwd(value.pwd)?;
-        let config = get_config(value.config)?;
+        let pwd = PathBuf::try_from(&value.action)?;
 
         Ok(Svelte {
             action: value.action,
             operation,
             pwd,
-            config,
         })
     }
 }
@@ -67,7 +64,11 @@ impl FromStr for AllowedValues {
             "pc" => Ok(AllowedValues::Pc),
             "ps" => Ok(AllowedValues::Ps),
             "s" => Ok(AllowedValues::S),
-            _ => Err(anyhow::anyhow!("Invalid value {}. Allowed values are: {:?}", s, AllowedValues::all())),
+            _ => Err(anyhow::anyhow!(
+                "Invalid value {}. Allowed values are: {:?}",
+                s,
+                AllowedValues::all()
+            )),
         }
     }
 }
@@ -84,25 +85,26 @@ impl TryFrom<&Action> for Operation {
                 for arg in &values.args {
                     AllowedValues::from_str(arg)?;
                 }
-                Ok(Operation::Pages(values.args.iter().map(|v| AllowedValues::from_str(v).unwrap()).collect()))
+                Ok(Operation::Pages(
+                    values
+                        .args
+                        .iter()
+                        .map(|v| AllowedValues::from_str(v).unwrap())
+                        .collect(),
+                ))
             }
         }
     }
 }
 
-fn get_config(config: Option<PathBuf>) -> Result<PathBuf> {
-    if let Some(v) = config {
-        return Ok(v);
+impl TryFrom<&Action> for PathBuf {
+    type Error = anyhow::Error;
+
+    fn try_from(value: &Action) -> Result<Self> {
+        match value {
+            Action::Add(values) => get_pwd(values.pwd.clone()),
+        }
     }
-    let loc = std::env::var("XDG_CONFIG_HOME")
-        .or_else(|_| std::env::var("HOME").map(|v| v + "/.config"))
-        .context("config not set")?;
-
-    let mut loc = PathBuf::from(loc);
-
-    loc.push("svelte-cli.json");
-
-    return Ok(loc);
 }
 
 fn get_pwd(pwd: Option<PathBuf>) -> Result<PathBuf> {
