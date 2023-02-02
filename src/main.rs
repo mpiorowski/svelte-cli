@@ -6,13 +6,13 @@ use sveltecli::templates::{
     page_svelte, server,
 };
 use sveltecli::{
-    config::{Operation, Svelte},
+    setup::{Operation, Setup},
     opts::Opts,
 };
-use sveltecli::config::AllowedValues;
+use sveltecli::setup::AllowedValues;
 
 fn main() -> Result<()> {
-    let opts = Svelte::try_from(Opts::parse())?;
+    let opts = Setup::try_from(Opts::parse())?;
     println!("{:?}", opts);
 
     match opts.operation {
