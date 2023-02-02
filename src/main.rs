@@ -1,3 +1,4 @@
+use std::io::Write;
 use anyhow::Result;
 use clap::Parser;
 use sveltecli::templates::{
@@ -24,28 +25,36 @@ fn main() -> Result<()> {
             for page in pages {
                 match page {
                     AllowedValues::E => {
-                        std::fs::write(&full_pwd.join("+error.svelte"), error_svelte())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+error.svelte"))?;
+                        file.write_all(error_svelte().as_bytes())?;
                     }
                     AllowedValues::L => {
-                        std::fs::write(&full_pwd.join("+layout.svelte"), layout_svelte())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+layout.svelte"))?;
+                        file.write_all(layout_svelte().as_bytes())?;
                     }
                     AllowedValues::Lc => {
-                        std::fs::write(&full_pwd.join("+layout.ts"), layout_client())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+layout.ts"))?;
+                        file.write_all(layout_client().as_bytes())?;
                     }
                     AllowedValues::Ls => {
-                        std::fs::write(&full_pwd.join("+layout.server.ts"), layout_server())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+layout.server.ts"))?;
+                        file.write_all(layout_server().as_bytes())?;
                     }
                     AllowedValues::P => {
-                        std::fs::write(&full_pwd.join("+page.svelte"), page_svelte())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+page.svelte"))?;
+                        file.write_all(page_svelte().as_bytes())?;
                     }
                     AllowedValues::Pc => {
-                        std::fs::write(&full_pwd.join("+page.ts"), page_client())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+page.ts"))?;
+                        file.write_all(page_client().as_bytes())?;
                     }
                     AllowedValues::Ps => {
-                        std::fs::write(&full_pwd.join("+page.server.ts"), page_server())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("+page.server.ts"))?;
+                        file.write_all(page_server().as_bytes())?;
                     }
                     AllowedValues::S => {
-                        std::fs::write(&full_pwd.join("+server.ts"), server())?;
+                        let mut file = std::fs::File::create(&full_pwd.join("server.ts"))?;
+                        file.write_all(server().as_bytes())?;
                     }
                 }
             }
