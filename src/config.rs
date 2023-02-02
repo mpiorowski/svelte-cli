@@ -38,16 +38,19 @@ pub enum Operation {
 
 #[derive(Debug)]
 pub enum AllowedValues {
+    E,
     L,
+    Lc,
     Ls,
     P,
+    Pc,
     Ps,
     S,
 }
 
 impl AllowedValues {
     pub fn all() -> Vec<&'static str> {
-        vec!["l", "ls", "p", "ps", "s"]
+        vec!["e", "l", "lc", "ls", "p", "pc", "ps", "s"]
     }
 }
 
@@ -56,9 +59,12 @@ impl FromStr for AllowedValues {
 
     fn from_str(s: &str) -> Result<Self> {
         match s {
+            "e" => Ok(AllowedValues::E),
             "l" => Ok(AllowedValues::L),
+            "lc" => Ok(AllowedValues::Lc),
             "ls" => Ok(AllowedValues::Ls),
             "p" => Ok(AllowedValues::P),
+            "pc" => Ok(AllowedValues::Pc),
             "ps" => Ok(AllowedValues::Ps),
             "s" => Ok(AllowedValues::S),
             _ => Err(anyhow::anyhow!("Invalid value {}. Allowed values are: {:?}", s, AllowedValues::all())),
