@@ -42,12 +42,12 @@ sv add ps p e l
 ```
 
 ## Pages
-e => "+error.svelte",
-l => "+layout.svelte",
-lc => "+layout.ts",
-lc => "+layout.server.ts",
-p => "+page.svelte",
-pc => "+page.ts",
-ps => "+page.server.ts",
-s => "+server.ts",
+e   => "+error.svelte"  
+l   => "+layout.svelte"  
+lc  => "+layout.ts"  
+lc  => "+layout.server.ts"  
+p   => "+page.svelte"  
+pc  => "+page.ts"  
+ps  => "+page.server.ts"  
+s   => "+server.ts"  
 
