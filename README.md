@@ -7,7 +7,7 @@ WIP
 ```
 cargo install sveltecli
 ```
-Please make sure that ~/.cargo/bin is in your PATH.
+Please make sure that `~/.cargo/bin` is in your PATH.  
 In the future more distro related options will be added :)
 
 ## Usage
