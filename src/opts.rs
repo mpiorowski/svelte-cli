@@ -1,9 +1,10 @@
-use clap::{Parser, Subcommand, Args};
+use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
 
 #[derive(Subcommand, Debug)]
 pub enum Action {
     Add(Add),
+    Config(Config),
 }
 
 #[derive(Parser, Debug)]
@@ -15,15 +16,19 @@ pub enum Action {
 pub struct Opts {
     #[command(subcommand)]
     pub action: Action,
-
-    #[arg(short = 'p', long = "pwd")]
-    pub pwd: Option<PathBuf>,
-
-    #[arg(short = 'c', long = "config")]
-    pub config: Option<PathBuf>,
 }
 
 #[derive(Args, Debug)]
 pub struct Add {
     pub args: Vec<String>,
+
+    #[arg(short = 'p', long = "pwd")]
+    pub pwd: Option<PathBuf>,
+}
+
+#[derive(Args, Debug)]
+pub struct Config {
+    pub key: String,
+
+    pub value: String,
 }
