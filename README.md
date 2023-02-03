@@ -19,7 +19,7 @@ Example:
 ```
 sv add ps -p reports
 ```
-This will add +page.server.ts in Your `reports` folder (it will create it if not existed) with the follwoing template:
+This will add `+page.server.ts` in Your `reports` folder (it will create it if not existed) with the follwoing template:
 ```
 import { Actions, PageServerLoad } from "./$types";
 
@@ -42,12 +42,14 @@ sv add ps p e l
 ```
 
 ## Pages
-e   => "+error.svelte"  
-l   => "+layout.svelte"  
-lc  => "+layout.ts"  
-lc  => "+layout.server.ts"  
-p   => "+page.svelte"  
-pc  => "+page.ts"  
-ps  => "+page.server.ts"  
-s   => "+server.ts"  
+| Command      | Page             |
+| ----------- | ------------------|
+| e           | +error.svelte     |
+| l           | +layout.svelte    |
+| lc          | +layout.ts        |
+| ls          | +layout.server.ts |
+| p           | +page.svelte      |
+| pc          | +page.ts          |
+| ps          | +page.server.ts   |
+| s           | +server.ts        |
 
