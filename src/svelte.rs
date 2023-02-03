@@ -72,8 +72,12 @@ pub fn create_page(page: Page, pwd: &PathBuf, templates_path: &Option<PathBuf>) 
 
     if let Some(val) = templates_path {
         let file_path = val.join(page_str);
-        let file_content = std::fs::read_to_string(file_path).context("File not found")?;
-        page_content = file_content;
+        if std::fs::metadata(&file_path).is_err() {
+            page_content = String::from(Page::get_content(&page));
+        } else {
+            let file_content = std::fs::read_to_string(file_path).context("File not found")?;
+            page_content = file_content;
+        }
     } else {
         page_content = String::from(Page::get_content(&page));
     }
