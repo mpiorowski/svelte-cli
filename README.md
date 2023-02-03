@@ -14,12 +14,12 @@ In the future more distro related options will be added :)
 ```
 sv add [pages] -p [path]
 ```
-This command will add specified routing files with the basic tempalte. 
+This command will add specified routing files with the basic template. 
 Example: 
 ```
 sv add ps -p reports
 ```
-This will add `+page.server.ts` in Your `reports` folder (it will create it if not existed) with the follwoing template:
+This will add `+page.server.ts` to Your `reports` folder (it will create it if not existed) with the following template:
 ```
 import { Actions, PageServerLoad } from "./$types";
 
