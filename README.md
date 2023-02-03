@@ -36,3 +36,18 @@ export const actions = {
     },
 } satisfies Actions;
 ```
+You can also add multiple files in one command:
+```
+sv add ps p e l
+```
+
+## Pages
+e => "+error.svelte",
+l => "+layout.svelte",
+lc => "+layout.ts",
+lc => "+layout.server.ts",
+p => "+page.svelte",
+pc => "+page.ts",
+ps => "+page.server.ts",
+s => "+server.ts",
+
