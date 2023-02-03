@@ -1,5 +1,13 @@
 use crate::opts::Action;
 use crate::opts::Opts;
+use crate::templates::error_svelte;
+use crate::templates::layout_client;
+use crate::templates::layout_server;
+use crate::templates::layout_svelte;
+use crate::templates::page_client;
+use crate::templates::page_server;
+use crate::templates::page_svelte;
+use crate::templates::server;
 use ::anyhow::Result;
 use anyhow::Context;
 use std::path::PathBuf;
@@ -30,11 +38,12 @@ impl TryFrom<Opts> for Setup {
 #[derive(Debug)]
 pub enum Operation {
     Print(Option<String>),
-    Pages(Vec<AllowedValues>),
+    Pages(Vec<Page>),
+    ConfigTemplatesPath(PathBuf),
 }
 
 #[derive(Debug)]
-pub enum AllowedValues {
+pub enum Page {
     E,
     L,
     Lc,
@@ -45,29 +54,55 @@ pub enum AllowedValues {
     S,
 }
 
-impl AllowedValues {
+impl Page {
     pub fn all() -> Vec<&'static str> {
         vec!["e", "l", "lc", "ls", "p", "pc", "ps", "s"]
     }
+
+    pub fn get_page(&self) -> &'static str {
+        match self {
+            Page::E => "+error.svelte",
+            Page::L => "+layout.svelte",
+            Page::Lc => "+layout.ts",
+            Page::Ls => "+layout.server.ts",
+            Page::P => "+page.svelte",
+            Page::Pc => "+page.ts",
+            Page::Ps => "+page.server.ts",
+            Page::S => "+server.ts",
+        }
+    }
+
+    pub fn get_content(&self) -> &'static str {
+        match self {
+            Page::E => error_svelte(),
+            Page::L => layout_svelte(),
+            Page::Lc => layout_client(),
+            Page::Ls => layout_server(),
+            Page::P => page_svelte(),
+            Page::Pc => page_client(),
+            Page::Ps => page_server(),
+            Page::S => server(),
+        }
+    }
 }
 
-impl FromStr for AllowedValues {
+impl FromStr for Page {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self> {
         match s {
-            "e" => Ok(AllowedValues::E),
-            "l" => Ok(AllowedValues::L),
-            "lc" => Ok(AllowedValues::Lc),
-            "ls" => Ok(AllowedValues::Ls),
-            "p" => Ok(AllowedValues::P),
-            "pc" => Ok(AllowedValues::Pc),
-            "ps" => Ok(AllowedValues::Ps),
-            "s" => Ok(AllowedValues::S),
+            "e" => Ok(Page::E),
+            "l" => Ok(Page::L),
+            "lc" => Ok(Page::Lc),
+            "ls" => Ok(Page::Ls),
+            "p" => Ok(Page::P),
+            "pc" => Ok(Page::Pc),
+            "ps" => Ok(Page::Ps),
+            "s" => Ok(Page::S),
             _ => Err(anyhow::anyhow!(
                 "Invalid value {}. Allowed values are: {:?}",
                 s,
-                AllowedValues::all()
+                Page::all()
             )),
         }
     }
@@ -83,15 +118,21 @@ impl TryFrom<&Action> for Operation {
                     return Err(anyhow::anyhow!("no args"));
                 }
                 for arg in &values.args {
-                    AllowedValues::from_str(arg)?;
+                    Page::from_str(arg)?;
                 }
                 Ok(Operation::Pages(
                     values
                         .args
                         .iter()
-                        .map(|v| AllowedValues::from_str(v).unwrap())
+                        .map(|v| Page::from_str(v).unwrap())
                         .collect(),
                 ))
+            }
+            Action::Config(values) => {
+                if values.key == "templates_path" {
+                    return Ok(Operation::ConfigTemplatesPath(PathBuf::from(&values.value)));
+                }
+                return Err(anyhow::anyhow!("Invalid key"));
             }
         }
     }
@@ -103,6 +144,7 @@ impl TryFrom<&Action> for PathBuf {
     fn try_from(value: &Action) -> Result<Self> {
         match value {
             Action::Add(values) => get_pwd(values.pwd.clone()),
+            Action::Config(_) => get_pwd(None),
         }
     }
 }
