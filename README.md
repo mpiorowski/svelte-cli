@@ -69,10 +69,10 @@ sv add ps p e l
 ### Language
 
 ```
-sv config lang js
+sv config lang [js or ts]
 ```
 
-This will set up the language to js. It will create files wtihout types, use the `.js` extension and search for `.js` files inside temp folder.
+This will set up the language. `js` lang will not use types, the files will have the `.js` extension and cli will search for `.js` files inside temp folder.
 
 ### Tempaltes
 
@@ -80,7 +80,7 @@ This will set up the language to js. It will create files wtihout types, use the
 sv config temp [path_to_your_templates_folder]
 ```
 
-This will set Your default templates. Inside this folder put the files with Your default templates. The name of the pages must much the default ones. You don't need to put all the pages, the cli will use the default one if some will be missing. Then add it:
+This will set Your default templates path. Inside this folder put the files with Your default templates. The name of the pages must much the default ones. You don't need to put all the pages, the cli will use the default one if some will be missing. Then add it:
 
 ## Default templates
 
