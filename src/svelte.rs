@@ -2,6 +2,7 @@ use crate::setup::Page;
 use crate::setup::Setup;
 use anyhow::Context;
 use anyhow::Result;
+use std::io::Read;
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -75,14 +76,16 @@ pub fn create_page(page: Page, pwd: &PathBuf, templates_path: &Option<PathBuf>) 
         if std::fs::metadata(&file_path).is_err() {
             page_content = String::from(Page::get_content(&page));
         } else {
-            let file_content = std::fs::read_to_string(file_path).context("File not found")?;
-            page_content = file_content;
+            let mut file = std::fs::File::open(&file_path).context("File not found")?;
+            let mut contents = String::new();
+            file.read_to_string(&mut contents)?;
+            page_content = contents.into();
         }
     } else {
-        page_content = String::from(Page::get_content(&page));
+        page_content = Page::get_content(&page).into();
     }
 
-    let mut file = std::fs::File::create(&pwd.join(page_str)).context("File not found")?;
+    let mut file = std::fs::File::create(&pwd.join(page_str.to_owned())).context("File not found")?;
     file.write_all(page_content.as_bytes())?;
 
     return Ok(());

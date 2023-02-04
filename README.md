@@ -101,7 +101,7 @@ sv config temp [path_to_your_templates_folder]
 import { LayoutLoad } from "./$types";
 
 export const load = (({ }) => {
-return {};
+    return {};
 }) satisfies LayoutLoad;
 ```
 
@@ -111,7 +111,7 @@ return {};
 import { LayoutServerLoad } from "./$types";
 
 export const load = (({ }) => {
-return {};
+    return {};
 }) satisfies LayoutServerLoad;
 ```
 
