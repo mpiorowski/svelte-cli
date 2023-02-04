@@ -53,16 +53,16 @@ sv add ps p e l
 
 ## Pages
 
-| Command | Page              |
-| ------- | ----------------- |
-| e       | +error.svelte     |
-| l       | +layout.svelte    |
-| lc      | +layout.ts        |
-| ls      | +layout.server.ts |
-| p       | +page.svelte      |
-| pc      | +page.ts          |
-| ps      | +page.server.ts   |
-| s       | +server.ts        |
+| Command | Page (ts)         | Page (js)         |
+| ------- | ----------------- | ----------------- |
+| e       | +error.svelte     | +error.svelte     |
+| l       | +layout.svelte    | +layout.svelte    |
+| lc      | +layout.ts        | +layout.js        |
+| ls      | +layout.server.ts | +layout.server.js |
+| p       | +page.svelte      | +page.svelte      |
+| pc      | +page.ts          | +page.js          |
+| ps      | +page.server.ts   | +page.server.js   |
+| s       | +server.ts        | +server.js        |
 
 ## Config
 
