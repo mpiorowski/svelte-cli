@@ -11,7 +11,7 @@ fn main() -> Result<()> {
     let svelte = Svelte::from_setup(opts)?;
     let pwd = &svelte.setup.pwd;
     let templates_path = &svelte.templates_path;
-    println!("{:?}", svelte);
+    // println!("{:?}", svelte);
 
     match svelte.setup.operation {
         Operation::Print(cli) => {
