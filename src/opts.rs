@@ -5,6 +5,7 @@ use std::path::PathBuf;
 pub enum Action {
     Add(Add),
     Config(Config),
+    Print,
 }
 
 #[derive(Parser, Debug)]
