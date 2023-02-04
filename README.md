@@ -66,11 +66,21 @@ sv add ps p e l
 
 ## Config
 
-You can also set Your default templates. To do that, create a folder and put the files with the template You want inside. You don't need to put all the pages, the cli will use the default one if some will be missing. Then add it:
+### Language
+
+```
+sv config lang js
+```
+
+This will set up the language to js. It will create files wtihout types, use the `.js` extension and search for `.js` files inside temp folder.
+
+### Tempaltes
 
 ```
 sv config temp [path_to_your_templates_folder]
 ```
+
+This will set Your default templates. Inside this folder put the files with Your default templates. The name of the pages must much the default ones. You don't need to put all the pages, the cli will use the default one if some will be missing. Then add it:
 
 ## Default templates
 
