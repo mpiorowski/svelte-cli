@@ -129,7 +129,7 @@ impl TryFrom<&Action> for Operation {
                 ))
             }
             Action::Config(values) => {
-                if values.key == "templates_path" {
+                if values.key == "temp" {
                     return Ok(Operation::ConfigTemplatesPath(PathBuf::from(&values.value)));
                 }
                 return Err(anyhow::anyhow!("Invalid key"));
